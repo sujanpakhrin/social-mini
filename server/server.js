@@ -1,0 +1,32 @@
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import express from "express";
+import cors from "cors";
+import userRoutes from "./routes/userRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
+
+dotenv.config();
+connectDB();
+
+const app = express();
+
+// CORS configuration
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});
