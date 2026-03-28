@@ -1,13 +1,18 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function AuthForm({ mode, setMode }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setPassword("");
+    setName("");
+  }, [mode]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,23 +32,16 @@ export default function AuthForm({ mode, setMode }) {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage(`${mode} successful! Token: ${data.token}`);
         localStorage.setItem("token", data.token); //store JWT
         if (mode === "register") {
-          toast.success("Registration successful! Please log in.");
+          toast.success(data.message);
+
           setMode("login"); //switch to login after successful registration
         } else {
-          toast.success("Login successful! Welcome back.");
+          toast.success(data.message);
           navigate("/home"); //redirect to home page after successful login
         }
       } else {
-        if ((data.message = "User already exists")) {
-          toast.error("User already exists! Please log in.");
-          navigate("/"); //redirect to login page
-          setMode("login");
-          return;
-        }
-        setMessage(data.message || "Error");
         toast.error(data.message);
       }
     } catch (err) {
