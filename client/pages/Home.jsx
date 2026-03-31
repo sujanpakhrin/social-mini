@@ -5,21 +5,28 @@ export default function Home() {
   const [text, setText] = useState("");
   const [posts, setPosts] = useState([]);
 
+  const userColors = {
+    "Sujan Pakhrin": "#FF6B6B",
+    Sakura: "#4ECDC4",
+    Charlie: "#FFD93D",
+  };
+
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/posts/", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const data = await response.json();
+      setPosts(data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/posts/", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        const data = await response.json();
-        setPosts(data);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
     fetchPosts();
   }, []);
 
@@ -46,6 +53,7 @@ export default function Home() {
 
       setPosts([newPost, ...posts]);
       setText("");
+      fetchPosts();
     } catch (error) {
       console.error("Error creating post:", error);
     }
@@ -76,7 +84,7 @@ export default function Home() {
           </div>
 
           {/*Posts*/}
-          <div className="flex flex-col bg-slate-900 h-screen w-210 items-center rounded-3xl p-5 gap-5">
+          <div className="flex flex-col bg-slate-900 w-210 items-center rounded-3xl p-5 gap-5">
             <div className="bg-slate-800 h-50 w-180 rounded-3xl flex flex-col justify-between gap-1 p-3  backdrop-blur-lg border border-white/20 ">
               <textarea
                 value={text}
@@ -113,14 +121,21 @@ export default function Home() {
                   </p>
                 </div>
               ) : (
-                posts.map((post) => (
-                  <div
-                    key={post._id}
-                    className="bg-slate-800 p-4 rounded-xl border border-slate-700"
-                  >
-                    <p className="text-slate-200">{post.text}</p>
-                  </div>
-                ))
+                posts.map((post) => {
+                  const userName = post.userId.name;
+                  const color = userColors[userName] || "#888888";
+                  return (
+                    <div
+                      key={post._id}
+                      className="bg-slate-800 p-4 rounded-xl border border-slate-700"
+                    >
+                      <p style={{ color }} className="font-bold text-lg mb-2">
+                        {userName}
+                      </p>
+                      <p className="text-slate-200">{post.text}</p>
+                    </div>
+                  );
+                })
               )}
             </div>
           </div>
