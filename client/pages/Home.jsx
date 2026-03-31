@@ -1,19 +1,54 @@
+import { useEffect } from "react";
 import { useState } from "react";
 
 export default function Home() {
   const [text, setText] = useState("");
   const [posts, setPosts] = useState([]);
 
-  const handlePost = () => {
-    if (!text.trim()) return; //prevent empty posts
-
-    const newPost = {
-      id: Date.now(),
-      content: text,
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/posts/", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
     };
+    fetchPosts();
+  }, []);
 
-    setPosts([newPost, ...posts]); //add new post to the top of the list
-    setText(""); //clear textarea after posting
+  const handlePost = async (e) => {
+    e.preventDefault();
+
+    const url = `http://localhost:3000/api/posts/create`;
+    const body = { text };
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(body),
+      });
+      const newPost = await response.json();
+
+      if (!response.ok) {
+        throw new Error(newPost.message || "Failed to create post");
+      }
+
+      setPosts([newPost, ...posts]);
+      setText("");
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
   };
 
   return (
@@ -80,10 +115,10 @@ export default function Home() {
               ) : (
                 posts.map((post) => (
                   <div
-                    key={post.id}
+                    key={post._id}
                     className="bg-slate-800 p-4 rounded-xl border border-slate-700"
                   >
-                    <p className="text-slate-200">{post.content}</p>
+                    <p className="text-slate-200">{post.text}</p>
                   </div>
                 ))
               )}

@@ -31,6 +31,9 @@ export default function AuthForm({ mode, setMode }) {
 
       const data = await res.json();
 
+      //store token here
+      localStorage.setItem("token", data.token);
+
       if (res.ok) {
         localStorage.setItem("token", data.token); //store JWT
         if (mode === "register") {
