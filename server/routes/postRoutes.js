@@ -2,6 +2,7 @@ import express from "express";
 import post from "../models/Post.js";
 import protect from "../middleware/authMiddleware.js";
 import { createPost, getPosts } from "../controllers/postController.js";
+import { likePost } from "../controllers/postController.js";
 
 const router = express.Router();
 
@@ -10,5 +11,8 @@ router.post("/create", protect, createPost);
 
 //get all posts ✅
 router.get("/", protect, getPosts);
+
+//likes
+router.put("/like/:id", protect, likePost);
 
 export default router;

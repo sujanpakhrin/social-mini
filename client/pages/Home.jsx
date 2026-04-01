@@ -59,6 +59,30 @@ export default function Home() {
     }
   };
 
+  const handleLike = async (postId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/posts/like/${postId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      const updatedPost = await response.json();
+
+      if (!response.ok) {
+        throw new Error(updatedPost.message || "Failed to like post");
+      }
+
+      setPosts((prev) => prev.map((p) => (p._id === postId ? updatedPost : p)));
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
   return (
     <>
       <div className="bg-slate-900 min-h-screen">
@@ -133,6 +157,21 @@ export default function Home() {
                         {userName}
                       </p>
                       <p className="text-slate-200">{post.text}</p>
+                      <div className="flex flex-row gap-5 p-2 ">
+                        <button
+                          type="button"
+                          onClick={() => handleLike(post._id)}
+                          className="bg-blue-500 p-2  rounded-2xl border-none text-white"
+                        >
+                          💗 {post.likes.length}
+                        </button>
+                        <button
+                          type="button"
+                          className="bg-green-500 p-2  rounded-2xl border-none text-black"
+                        >
+                          Comment {post.comments.length}
+                        </button>
+                      </div>
                     </div>
                   );
                 })
