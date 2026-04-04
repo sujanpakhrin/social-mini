@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import bgImage from "../src/assets/cats.jpg";
 
 export default function Home() {
   const [text, setText] = useState("");
@@ -85,9 +86,12 @@ export default function Home() {
 
   return (
     <>
-      <div className="bg-slate-900 min-h-screen">
+      <div
+        className="bg- min-h-screen w-full bg-cover bg-center "
+        style={{ backgroundImage: `url(${bgImage})` }}
+      >
         {/*header*/}
-        <div className="flex flex-row justify-between items-center p-3 px-10 bg-slate-900 text-white font-bold text-3xl">
+        <div className="flex flex-row justify-between items-center p-3 px-10 bg-slate-900 text-white font-bold text-3xl ">
           {" "}
           social-mini
           <button className="border-2 rounded px-2 py-1 text-white  font-medium text-sm cursor-pointer">
@@ -107,9 +111,9 @@ export default function Home() {
             </div>
           </div>
 
-          {/*Posts*/}
-          <div className="flex flex-col bg-slate-900 w-210 items-center rounded-3xl p-5 gap-5">
-            <div className="bg-slate-800 h-50 w-180 rounded-3xl flex flex-col justify-between gap-1 p-3  backdrop-blur-lg border border-white/20 ">
+          {/*Posts creation*/}
+          <div className="flex flex-col  w-210 items-center rounded-3xl p-5 gap-5 ">
+            <div className=" isolate bg-white/10 backdrop-blur-sm shadow-lg border border-white/20 h-50 w-180 rounded-3xl flex flex-col justify-between gap-1 p-3   ">
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
@@ -151,23 +155,23 @@ export default function Home() {
                   return (
                     <div
                       key={post._id}
-                      className="bg-slate-800 p-4 rounded-xl border border-slate-700"
+                      className="bg-white/90 backdrop-blur-lg shadow-xl border border-white/20 h-auto w-full rounded-3xl p-5  "
                     >
-                      <p style={{ color }} className="font-bold text-lg mb-2">
+                      <p style={{ color }} className="font-bold mb-2 prose-lg">
                         {userName}
                       </p>
-                      <p className="text-slate-200">{post.text}</p>
+                      <p className="text-black font-bold">{post.text}</p>
                       <div className="flex flex-row gap-5 p-2 ">
                         <button
                           type="button"
                           onClick={() => handleLike(post._id)}
-                          className="bg-blue-500 p-2  rounded-2xl border-none text-white"
+                          className="bg-blue-500 p-2  rounded-2xl border-none text-white cursor-pointer"
                         >
                           💗 {post.likes.length}
                         </button>
                         <button
                           type="button"
-                          className="bg-green-500 p-2  rounded-2xl border-none text-black"
+                          className="bg-green-500 p-2  rounded-2xl border-none text-black cursor-pointer"
                         >
                           Comment {post.comments.length}
                         </button>
