@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import bgImage from "../src/assets/cats.jpg";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [text, setText] = useState("");
   const [posts, setPosts] = useState([]);
+  const [image, setImage] = useState(null);
 
   const userColors = {
     "Sujan Pakhrin": "#FF6B6B",
@@ -35,16 +37,17 @@ export default function Home() {
     e.preventDefault();
 
     const url = `http://localhost:3000/api/posts/create`;
-    const body = { text };
+    const formData = new FormData();
+    formData.append("text", text);
+    formData.append("image", image);
 
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(body),
+        body: formData,
       });
       const newPost = await response.json();
 
@@ -54,6 +57,7 @@ export default function Home() {
 
       setPosts([newPost, ...posts]);
       setText("");
+      setImage(null);
       fetchPosts();
     } catch (error) {
       console.error("Error creating post:", error);
@@ -83,6 +87,13 @@ export default function Home() {
       console.error("Error liking post:", error);
     }
   };
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+
+    navigate("/");
+    // Redirect to login page
+  };
 
   return (
     <>
@@ -94,7 +105,10 @@ export default function Home() {
         <div className="flex flex-row justify-between items-center p-3 px-10 bg-slate-900 text-white font-bold text-3xl ">
           {" "}
           social-mini
-          <button className="border-2 rounded px-2 py-1 text-white  font-medium text-sm cursor-pointer">
+          <button
+            onClick={handleLogOut}
+            className=" bg-red-500 rounded px-2 py-1 text-white  font-medium text-sm cursor-pointer"
+          >
             Log out
           </button>
         </div>
@@ -122,9 +136,11 @@ export default function Home() {
                 placeholder="What's on your mind?"
               />
               <div className="flex flex-row gap-5 mt-3 ml-4">
-                <button className="bg-white px-2 py-1 rounded-2xl text-sm cursor-pointer">
-                  add image
-                </button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImage(e.target.files[0])}
+                />
                 <button className="bg-white px-2 py-1 rounded-2xl text-sm cursor-pointer">
                   add stickers
                 </button>
@@ -161,6 +177,15 @@ export default function Home() {
                         {userName}
                       </p>
                       <p className="text-black font-bold">{post.text}</p>
+                      {post.image && (
+                        <div className="rounded-lg overflow-hidden">
+                          <img
+                            src={`http://localhost:3000/uploads/${post.image}`}
+                            alt=""
+                            className="w-full max-h-120 object-cover"
+                          />
+                        </div>
+                      )}
                       <div className="flex flex-row gap-5 p-2 ">
                         <button
                           type="button"

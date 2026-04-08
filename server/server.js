@@ -22,6 +22,7 @@ app.use(express.json());
 
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/uploads", express.static("uploads")); // Serve static files from the uploads directory
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
