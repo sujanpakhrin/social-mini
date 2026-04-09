@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import bgImage from "../src/assets/cats.jpg";
+
 import { useNavigate } from "react-router-dom";
 
 export default function Home() {
@@ -30,6 +30,13 @@ export default function Home() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    //check auth
+    if (!token) {
+      navigate("/");
+      return;
+    }
+    //fetch posts if logged in
     fetchPosts();
   }, []);
 
@@ -97,12 +104,9 @@ export default function Home() {
 
   return (
     <>
-      <div
-        className="bg- min-h-screen w-full bg-cover bg-center "
-        style={{ backgroundImage: `url(${bgImage})` }}
-      >
+      <div className="bg- min-h-screen w-full bg-cover bg-center ">
         {/*header*/}
-        <div className="flex flex-row justify-between items-center p-3 px-10 bg-slate-900 text-white font-bold text-3xl ">
+        <div className="flex flex-row justify-between items-center p-3 px-10 bg-taupe-900 text-white font-bold text-3xl ">
           {" "}
           social-mini
           <button
@@ -114,7 +118,7 @@ export default function Home() {
         </div>
 
         {/*body*/}
-        <div className=" flex justify-between p-5">
+        <div className=" flex justify-between p-5 bg-taupe-900">
           {/*Sidebar*/}
           <div className=" w-40 flex flex-col items-start p-5 gap-3">
             <div className="text-white px-2 py-1 rounded-2xl cursor-pointer">

@@ -14,6 +14,13 @@ export default function AuthForm({ mode, setMode }) {
     setName("");
   }, [mode]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/home", {replace: true}); //redirect to home if already logged in
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
