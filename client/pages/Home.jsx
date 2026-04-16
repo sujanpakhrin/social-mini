@@ -131,24 +131,29 @@ export default function Home() {
 
           {/*Posts creation*/}
           <div className="flex flex-col  w-210 items-center rounded-3xl p-5 gap-5 ">
-            <div className=" isolate bg-white/10 backdrop-blur-sm shadow-lg border border-white/20 h-50 w-180 rounded-3xl flex flex-col justify-between gap-1 p-3   ">
+            <div className=" isolate bg-taupe-900 backdrop-blur-sm shadow-lg border border-white/20 h-40 w-180 rounded-3xl flex flex-col justify-between gap-1 p-3   ">
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 type="text"
-                className="text-white h-40 p-3 bg-slate-800w-full rounded-3xl rounded-bl-none rounded-br-none text-left placeholder-white outline-none focus:outline-none focus:ring-0 focus:border-none border-none text-sm transition duration-200"
+                className="text-white h-20 p-3 bg-slate-800w-full rounded-3xl rounded-bl-none rounded-br-none text-left placeholder-white outline-none focus:outline-none focus:ring-0 focus:border-none border-none text-sm transition duration-200"
                 placeholder="What's on your mind?"
               />
               <div className="flex flex-row gap-5 mt-3 ml-4">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setImage(e.target.files[0])}
-                />
-                <button className="bg-white px-2 py-1 rounded-2xl text-sm cursor-pointer">
+                <label className="flex items-center gap-2 px-2 py-2 bg-green-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition">
+                  Add Image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImage(e.target.files[0])}
+                    className="hidden"
+                  />
+                </label>
+
+                <button className="flex items-center gap-2 px-2 py-2 bg-pink-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition">
                   add stickers
                 </button>
-                <button className="bg-white px-2 py-1 rounded-2xl text-sm cursor-pointer">
+                <button className="flex items-center gap-2 px-2 py-2 bg-gray-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition">
                   add file
                 </button>
               </div>
@@ -175,12 +180,12 @@ export default function Home() {
                   return (
                     <div
                       key={post._id}
-                      className="bg-white/90 backdrop-blur-lg shadow-xl border border-white/20 h-auto w-full rounded-3xl p-5  "
+                      className="bg-taupe--900 backdrop-blur-lg shadow-xl border border-white/20 h-auto w-full rounded-3xl p-5  "
                     >
-                      <p style={{ color }} className="font-bold mb-2 prose-lg">
+                      <p style={{ color }} className="font-mono mb-2 prose-lg">
                         {userName}
                       </p>
-                      <p className="text-black font-bold">{post.text}</p>
+                      <p className="text-white font-thin">{post.text}</p>
                       {post.image && (
                         <div className="rounded-lg overflow-hidden">
                           <img
