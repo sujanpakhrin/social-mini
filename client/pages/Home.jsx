@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import emojis from "../data/emoji";
+import baseURL from "../src/config/api";
 
 import { useNavigate } from "react-router-dom";
 
@@ -18,7 +19,7 @@ export default function Home() {
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/posts/", {
+      const response = await fetch(`${baseURL}/api/posts/`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -45,7 +46,7 @@ export default function Home() {
   const handlePost = async (e) => {
     e.preventDefault();
 
-    const url = `http://localhost:3000/api/posts/create`;
+    const url = `${baseURL}/api/posts/create`;
     const formData = new FormData();
     formData.append("text", text);
     formData.append("image", image);
@@ -75,16 +76,13 @@ export default function Home() {
 
   const handleLike = async (postId) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/posts/like/${postId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+      const response = await fetch(`${baseURL}/api/posts/like/${postId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      );
+      });
       const updatedPost = await response.json();
 
       if (!response.ok) {

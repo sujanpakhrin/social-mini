@@ -2,6 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import baseURL from "../src/config/api";
 
 export default function AuthForm({ mode, setMode }) {
   const [name, setName] = useState("");
@@ -23,7 +24,6 @@ export default function AuthForm({ mode, setMode }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const baseURL = import.meta.env.VITE_API_URL;
     const url = `${baseURL}/api/users/${mode}`;
     const body =
       mode === "register" ? { name, email, password } : { email, password };
