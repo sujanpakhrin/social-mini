@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import emojis from "../data/emoji";
 
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +8,7 @@ export default function Home() {
   const [text, setText] = useState("");
   const [posts, setPosts] = useState([]);
   const [image, setImage] = useState(null);
+  const [showEmoji, setShowEmoji] = useState(false);
 
   const userColors = {
     "Sujan Pakhrin": "#FF6B6B",
@@ -139,6 +141,22 @@ export default function Home() {
                 className="text-white  h-20 p-3 bg-slate-800w-full rounded-3xl rounded-bl-none rounded-br-none text-left placeholder-white outline-none focus:outline-none focus:ring-0 focus:border-none border-none text-sm transition duration-200"
                 placeholder="What's on your mind?"
               />
+              {showEmoji && (
+                <div className="absolute bottom-30 left-50 bg-white border shadow p-2 grid grid-cols-5 gap-2 z-50">
+                  {emojis.map((emoji, i) => (
+                    <span
+                      key={i}
+                      className="text-xl cursor-pointer hover:scale-125"
+                      onClick={() => {
+                        setText((prev) => prev + emoji);
+                        setShowEmoji(false);
+                      }}
+                    >
+                      {emoji}
+                    </span>
+                  ))}
+                </div>
+              )}
               <div className="flex flex-row gap-5 mt-3 ml-4">
                 <label className="flex items-center gap-2 px-2 py-2 bg-green-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition">
                   Add Image
@@ -150,8 +168,11 @@ export default function Home() {
                   />
                 </label>
 
-                <button className="flex items-center gap-2 px-2 py-2 bg-pink-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition">
-                  add stickers
+                <button
+                  className="flex items-center gap-2 px-2 py-2 bg-pink-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition"
+                  onClick={() => setShowEmoji(!showEmoji)}
+                >
+                  add emoji
                 </button>
                 <button className="flex items-center gap-2 px-2 py-2 bg-gray-600 text-white rounded-lg cursor-pointer hover:bg-blue-700 transition">
                   add file
