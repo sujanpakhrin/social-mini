@@ -23,8 +23,8 @@ export default function AuthForm({ mode, setMode }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const url = `http://localhost:3000/api/users/${mode}`;
+    const baseURL = import.meta.env.VITE_API_URL;
+    const url = `${baseURL}/api/users/${mode}`;
     const body =
       mode === "register" ? { name, email, password } : { email, password };
 
