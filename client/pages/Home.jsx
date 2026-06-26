@@ -208,8 +208,8 @@ export default function Home() {
                       {post.image && (
                         <div className="rounded-lg overflow-hidden">
                           <img
-                            src={`http://localhost:3000/uploads/${post.image}`}
-                            alt=""
+                            src={post.image}
+                            alt="post"
                             className="w-full max-h-120 object-cover"
                           />
                         </div>
