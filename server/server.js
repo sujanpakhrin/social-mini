@@ -13,7 +13,7 @@ const app = express();
 // CORS configuration
 app.use(
   cors({
-    origin: "https://social-mini-livid.vercel.app",
+    origin: "https://social-mini-five.vercel.app",
     credentials: true,
   }),
 );
