@@ -18,7 +18,7 @@ export default function AuthForm({ mode, setMode }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/home", {replace: true}); //redirect to home if already logged in
+      navigate("/home", { replace: true }); //redirect to home if already logged in
     }
   }, [navigate]);
 
@@ -132,9 +132,8 @@ export default function AuthForm({ mode, setMode }) {
                 <>
                   <button
                     type="submit"
-                    className="w-full py-2 rounded-xl bg-black text-white 
-            hover:bg-gray-800 dark:bg-white dark:text-black 
-            dark:hover:bg-gray-200 transition duration-200 font-medium cursor-pointer"
+                    className="w-full py-2 rounded-xl bg-blue-700 text-white 
+  hover:bg-blue-800 transition duration-200 font-medium cursor-pointer"
                   >
                     Sign In
                   </button>
@@ -142,7 +141,9 @@ export default function AuthForm({ mode, setMode }) {
                     onClick={() => {
                       setMode("login");
                     }}
-                    className="w-15 text-white border-b font-light cursor-pointer"
+                    className="w-full py-2 rounded-xl bg-black text-white 
+            hover:bg-gray-800 dark:bg-white dark:text-black 
+            dark:hover:bg-gray-200 transition duration-200 font-medium cursor-pointer"
                   >
                     Login
                   </button>
@@ -160,7 +161,9 @@ export default function AuthForm({ mode, setMode }) {
                     onClick={() => {
                       setMode("register");
                     }}
-                    className="w-15  text-white border-b font-light cursor-pointer"
+                    className="w-full py-2 rounded-xl bg-black text-white 
+            hover:bg-gray-800 dark:bg-white dark:text-black 
+            dark:hover:bg-gray-200 transition duration-200 font-medium cursor-pointer"
                   >
                     Sign In
                   </button>
