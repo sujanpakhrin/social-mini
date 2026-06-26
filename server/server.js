@@ -1,8 +1,5 @@
 import dotenv from "dotenv";
 
-console.log("Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME);
-console.log("API Key:", process.env.CLOUDINARY_API_KEY);
-console.log("API Secret exists:", !!process.env.CLOUDINARY_API_SECRET);
 import connectDB from "./config/db.js";
 import express from "express";
 import cors from "cors";
@@ -17,7 +14,7 @@ const app = express();
 // CORS configuration
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://social-mini-five.vercel.app",
     credentials: true,
   }),
 );
