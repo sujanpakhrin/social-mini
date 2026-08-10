@@ -3,7 +3,7 @@ import Post from "../models/Post.js";
 export const createPost = async (req, res) => {
   try {
     const { text } = req.body;
-    const image = req.file.path;
+    const image = req.file ? req.file.path : null;
     if (!text) {
       return res.status(400).json({ message: "Text is required" });
     }
@@ -14,9 +14,10 @@ export const createPost = async (req, res) => {
     });
     res.status(201).json(post, { message: "Post created successfully!" });
     console.log(req.body);
-    console.log(req.file)
+    console.log(req.file);
   } catch (error) {
-    res.status(500).json({ message: "Failed to create post" });
+    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
