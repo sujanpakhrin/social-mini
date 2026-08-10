@@ -11,13 +11,19 @@ connectDB();
 
 const app = express();
 
+const allowedOrigins = [
+  "https://social-mini-five.vercel.app",
+  "http://localhost:5173",
+];
+
 // CORS configuration
 app.use(
   cors({
-    origin: "https://social-mini-five.vercel.app",
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
+
 // Middleware to parse JSON bodies
 app.use(express.json());
 
