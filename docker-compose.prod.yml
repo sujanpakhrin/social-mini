@@ -18,6 +18,15 @@ services:
         condition: service_started
     restart: unless-stopped
 
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - proxy
+    restart: unless-stopped
+
   server:
     image: ${DOCKERHUB_USERNAME}/social-mini-server:${IMAGE_TAG:-latest}
     env_file: .env
