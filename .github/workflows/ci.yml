@@ -11,9 +11,6 @@ env:
   SERVER_IMAGE: social-mini-server
   CLIENT_IMAGE: social-mini-client
 
-concurrency:
-  group: social-mini-deploy
-  cancel-in-progress: true
 
 jobs:
   build:
@@ -60,7 +57,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           # VITE_API_URL is baked in at build time; only the client Dockerfile uses it
           build-args: |
-            VITE_API_URL=${{ vars.VITE_API_URL || 'http://localhost:5000' }}
+            VITE_API_URL=
           cache-from: type=gha,scope=${{ matrix.name }}
           cache-to: type=gha,mode=max,scope=${{ matrix.name }}
 
@@ -70,6 +67,9 @@ jobs:
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: [self-hosted, linux]
+    concurrency:
+      group: social-mini-deploy
+      cancel-in-progress: false
     steps:
       - name: Checkout (for the compose file only)
         uses: actions/checkout@v4
@@ -79,26 +79,42 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Real secrets live in /opt/social-mini/.env on the VM, never in the repo
+          mkdir -p /opt/social-mini/proxy
           cp docker-compose.prod.yml /opt/social-mini/docker-compose.yml
+          cp proxy/nginx.conf /opt/social-mini/proxy/nginx.conf
           cd /opt/social-mini
           docker compose pull
           docker compose up -d --remove-orphans
+          docker compose exec -T proxy nginx -s reload
           docker image prune -f
           docker compose ps
 
-      - name: Check deployed backend
+      - name: Check proxy and client
         run: |
           for i in {1..10}; do
-            if curl --fail --silent --show-error http://localhost:5000/; then
-              echo "Application is healthy"
+            if curl --fail --silent --show-error --output /dev/null http://localhost/; then
+              echo "Proxy and client are healthy"
               exit 0
             fi
-
-            echo "Application not ready yet... attempt $i/10"
+            echo "Proxy not ready yet... attempt $i/10"
             sleep 3
           done
-
-          echo "Application failed health check"
+          echo "Proxy health check failed"
           exit 1
-          
+
+      - name: Check backend
+        run: |
+          for i in {1..10}; do
+            if curl --fail --silent --show-error --output /dev/null http://localhost:5000/; then
+              echo "Backend is healthy"
+              exit 0
+            fi
+            echo "Backend not ready yet... attempt $i/10"
+            sleep 3
+          done
+          echo "Backend failed health check"
+          exit 1
+
+
+
 
