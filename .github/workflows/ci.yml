@@ -84,7 +84,7 @@ jobs:
           cp proxy/nginx.conf /opt/social-mini/proxy/nginx.conf
           cd /opt/social-mini
           docker compose pull
-          docker compose up -d --remove-orphans
+          docker compose up -d --remove-orphans --wait --wait-timeout 90
           docker compose exec -T proxy nginx -s reload
           docker image prune -f
           docker compose ps
