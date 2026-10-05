@@ -55,7 +55,7 @@ export default function AuthForm({ mode, setMode }) {
         toast.error(data.message);
       }
     } catch (err) {
-      setMessage("Network error");
+      toast.error("Network error");
     }
   };
   return (
