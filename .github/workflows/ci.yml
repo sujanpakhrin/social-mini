@@ -88,4 +88,17 @@ jobs:
 
       - name: Check deployed backend
         run: |
-          curl --fail --retry 5 --retry-delay 3 http://localhost:5000/
+          for i in {1..10}; do
+            if curl --fail --silent --show-error http://localhost:5000/; then
+              echo "Application is healthy"
+              exit 0
+            fi
+
+            echo "Application not ready yet... attempt $i/10"
+            sleep 3
+          done
+
+          echo "Application failed health check"
+          exit 1
+          
+
