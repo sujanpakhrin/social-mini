@@ -13,7 +13,7 @@ services:
       - ./proxy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       server:
-        condition: service_started
+        condition: service_healthy
       client:
         condition: service_started
     restart: unless-stopped
@@ -23,6 +23,12 @@ services:
     env_file: .env
     ports:
       - "127.0.0.1:5000:5000"   # loopback only: the runner health check can reach it, the network can't
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:5000/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
     restart: unless-stopped
     # TODO: copy the healthcheck block from your existing docker-compose.yml
 
@@ -31,5 +37,5 @@ services:
     # no ports: only the proxy talks to it, over the Compose network
     depends_on:
       server:
-        condition: service_started   # switch to service_healthy once the healthcheck is copied
+        condition: service_healthy   # switch to service_healthy once the healthcheck is copied
     restart: unless-stopped
