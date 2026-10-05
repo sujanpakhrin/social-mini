@@ -11,6 +11,10 @@ env:
   SERVER_IMAGE: social-mini-server
   CLIENT_IMAGE: social-mini-client
 
+concurrency:
+  group: social-mini-deploy
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -81,3 +85,7 @@ jobs:
           docker compose up -d --remove-orphans
           docker image prune -f
           docker compose ps
+
+      - name: Check deployed backend
+        run: |
+          curl --fail --retry 5 --retry-delay 3 http://localhost:5000/
